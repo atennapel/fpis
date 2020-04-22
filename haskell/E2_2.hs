@@ -1,5 +1,6 @@
 -- runhaskell E2_2.hs
 
+-- small letters are implicitly declared type parameters (called type variables)
 isSorted :: [a] -> (a -> a -> Bool) -> Bool
 isSorted as ordered = loop as
   where

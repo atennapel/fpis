@@ -50,5 +50,20 @@ product l = foldLeft l 1 (*)
 length2 :: List t -> Int
 length2 l = foldLeft l 0 (\a _ -> a + 1)
 
+reverse :: List t -> List t
+reverse l = foldLeft l Nil (flip Cons)
+
+foldLeft2 :: List a -> b -> (b -> a -> b) -> b
+foldLeft2 l x f = (foldRight l id (\b g x -> g (f x b))) x
+
+foldRight2 :: List a -> b -> (a -> b -> b) -> b
+foldRight2 l x f = (foldLeft l id (\g b x -> g (f b x))) x
+
+append :: List a -> List a -> List a
+append a b = foldRight a b Cons
+
+flatten :: List (List a) -> List a
+flatten l = foldLeft l Nil append
+
 main :: IO ()
 main = return ()

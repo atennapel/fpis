@@ -68,4 +68,17 @@ object List {
   def product(l: List[Int]): Int = foldLeft(l, 1)(_ * _)
   def length2[T](l: List[T]): Int = foldLeft(l, 0)((a, _) => a + 1)
 
+  def reverse[T](l: List[T]): List[T] = foldLeft(l, Nil: List[T])((a, h) => Cons(h, a))
+
+  def foldLeft2[A, B](as: List[A], z: B)(f: (B, A) => B): B =
+    foldRight(as, (x: B) => x)((b, g) => x => g(f(x, b)))(z)
+  def foldRight2[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(as, (x: B) => x)((g, b) => x => g(f(b, x)))(z)
+
+  def append[T](a: List[T], b: List[T]): List[T] =
+    foldRight(a, b)(Cons(_, _))
+  
+  def flatten[T](xs: List[List[T]]): List[T] =
+    foldLeft(xs, Nil: List[T])(append)
+
 }

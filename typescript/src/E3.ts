@@ -30,7 +30,7 @@ const foldRight = <A, B>(l: List<A>, x: B, f: (h: A, a: B) => B): B =>
 const length2 = <T>(l: List<T>): number => foldRight(l, 0, (_, b) => b + 1);
 
 // use trampoline to make it tail recursive
-const foldLeft = <A, B>(l: List<A>, x: B, f: (a: B, h: A) => B) => {
+const foldLeft = <A, B>(l: List<A>, x: B, f: (a: B, h: A) => B): B => {
   const loop = (l: List<A>, a: B): Rec<B> =>
     l.tag === 'Nil' ? Ret(a) : Delay(() => loop(l.tail, f(a, l.head)));
   return runRec(loop(l, x));
@@ -39,3 +39,16 @@ const foldLeft = <A, B>(l: List<A>, x: B, f: (a: B, h: A) => B) => {
 const sum = (l: List<number>): number => foldLeft(l, 0, (a, b) => a + b);
 const product = (l: List<number>): number => foldLeft(l, 1, (a, b) => a * b);
 const length3 = <T>(l: List<T>): number => foldLeft(l, 0, (a, _) => a + 1)
+
+const reverse = <T>(l: List<T>): List<T> => foldLeft(l, Nil as List<T>, (a, h) => Cons(h, a));
+
+const foldLeft2 = <A, B>(l: List<A>, x: B, f: (a: B, h: A) => B): B =>
+  foldRight(l, (x: B) => x, (b, g) => x => g(f(x, b)))(x);
+const foldRight2 = <A, B>(l: List<A>, x: B, f: (h: A, a: B) => B): B =>
+  foldLeft(l, (x: B) => x, (g, b) => x => g(f(b, x)))(x);
+
+const append = <T>(a: List<T>, b: List<T>): List<T> =>
+  foldRight(a, b, Cons);
+
+const flatten = <T>(xs: List<List<T>>): List<T> =>
+  foldLeft(xs, Nil as List<T>, append);

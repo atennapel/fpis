@@ -1,0 +1,15 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Albert ten Napel",
+  "email": "aptennap@gmail.com",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}

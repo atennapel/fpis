@@ -30,8 +30,8 @@ object List {
     @annotation.tailrec
     def loop(l: List[T]): List[T] =
       l match {
-        case Nil => Nil
-        case Cons(h, t) => if (f(h)) loop(t) else l
+        case Cons(h, t) if f(h) => loop(t)
+        case _ => l
       }
 
     loop(l)

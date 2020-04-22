@@ -19,7 +19,7 @@ const drop = <T>(l: List<T>, n: number): List<T> =>
   l.tag === 'Nil' ? Nil : n == 0 ? l : drop(l.tail, n - 1);
 
 const dropWhile = <T>(l: List<T>, f: (x: T) => boolean): List<T> =>
-  l.tag === 'Nil' ? Nil : f(l.head) ? dropWhile(l.tail, f) : l;
+  l.tag === 'Cons' && f(l.head) ? dropWhile(l.tail, f) : l;
 
 const init = <T>(l: List<T>): List<T> =>
   l.tag === 'Nil' ? Nil : l.tail.tag === 'Nil' ? Nil : Cons(l.head, init(l.tail));

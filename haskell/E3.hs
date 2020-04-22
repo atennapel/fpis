@@ -22,8 +22,8 @@ drop (Cons _ t) n = drop t (n - 1)
 dropWhile :: List t -> (t -> Bool) -> List t
 dropWhile l f = loop l
   where
-    loop Nil = Nil
-    loop l@(Cons h t) = if f h then loop t else l
+    loop (Cons h t) | f h = loop t
+    loop l = l
 
 init :: List t -> List t
 init Nil = Nil

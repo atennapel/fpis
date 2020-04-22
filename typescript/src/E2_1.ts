@@ -10,19 +10,7 @@ const fib = (n: number): number => {
 console.log([0, 1, 2, 3, 4, 5].map(fib));
 // console.log(fib(10000)); // stack overflow
 
-// we can use a trampoline to avoid a stack overflow
-type Rec<T> = Ret<T> | Delay<T>;
-
-type Ret<T> = { tag: 'Ret', val: T };
-const Ret = <T>(val: T): Rec<T> => ({ tag: 'Ret', val });
-type Delay<T> = { tag: 'Delay', fn: () => Rec<T> };
-const Delay = <T>(fn: () => Rec<T>): Rec<T> => ({ tag: 'Delay', fn });
-
-const runRec = <T>(rec: Rec<T>): T => {
-  let c: Rec<T> = rec;
-  while (c.tag === 'Delay') c = c.fn();
-  return c.val;
-};
+import { Rec, Ret, Delay, runRec } from './Trampoline';
 
 const fibT = (n: number): number => {
   const fibR = (n: number, a: number, b: number): Rec<number> =>

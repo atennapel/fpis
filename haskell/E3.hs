@@ -30,5 +30,25 @@ init Nil = Nil
 init (Cons _ Nil) = Nil
 init (Cons h t) = Cons h (init t)
 
+foldRight :: List a -> b -> (a -> b -> b) -> b
+foldRight Nil z f = z
+foldRight (Cons h t) z f = f h (foldRight t z f)
+
+length :: List t -> Int
+length l = foldRight l 0 (const (+ 1))
+
+foldLeft :: List a -> b -> (b -> a -> b) -> b
+foldLeft l z f = loop l z
+  where
+    loop Nil z = z
+    loop (Cons h t) z = loop t (f z h)
+
+sum, product :: List Int -> Int
+sum l = foldLeft l 0 (+)
+product l = foldLeft l 1 (*)
+
+length2 :: List t -> Int
+length2 l = foldLeft l 0 (\a _ -> a + 1)
+
 main :: IO ()
 main = return ()

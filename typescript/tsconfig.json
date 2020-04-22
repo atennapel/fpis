@@ -10,7 +10,6 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
     "types": [],
     "typeRoots": [ "node_modules/@types" ]
   },

@@ -1,7 +1,7 @@
 -- runhaskell E3.hs
 
 -- hide functions from the standard library
-import Prelude hiding (drop, dropWhile, init)
+import Prelude hiding (drop, dropWhile, init, map, filter, zipWith)
 
 data List t = Nil | Cons t (List t)
   deriving (Show)
@@ -64,6 +64,35 @@ append a b = foldRight a b Cons
 
 flatten :: List (List a) -> List a
 flatten l = foldLeft l Nil append
+
+add1toEach :: List Int -> List Int
+add1toEach l = foldLeft l Nil (\a h -> Cons (h + 1) a) 
+
+convertToString :: List Double -> List String
+convertToString l = foldLeft l Nil (\a h -> Cons (show h) a)
+
+map :: List a -> (a -> b) -> List b
+map l f = foldLeft l Nil (\a h -> Cons (f h) a)
+
+filter :: List a -> (a -> Bool) -> List a
+filter l f = foldLeft l Nil (\a h -> if f h then Cons h a else a)
+
+filterOdd :: List Int -> List Int
+filterOdd l = filter l (\n -> n `mod` 2 == 0)
+
+flatMap :: List a -> (a -> List b) -> List b
+flatMap l f = flatten (map l f)
+
+filter2 :: List a -> (a -> Bool) -> List a
+filter2 l f = flatMap l (\x -> if f x then Cons x Nil else Nil)
+
+zipAdd :: List Int -> List Int -> List Int
+zipAdd (Cons h1 t1) (Cons h2 t2) = Cons (h1 + h2) (zipAdd t1 t2)
+zipAdd _ _ = Nil
+
+zipWith :: (a -> b -> c) -> List a -> List b -> List c
+zipWith f (Cons h1 t1) (Cons h2 t2) = Cons (f h1 h2) (zipWith f t1 t2)
+zipWith _ _ _ = Nil
 
 main :: IO ()
 main = return ()

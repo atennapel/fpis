@@ -52,3 +52,26 @@ const append = <T>(a: List<T>, b: List<T>): List<T> =>
 
 const flatten = <T>(xs: List<List<T>>): List<T> =>
   foldLeft(xs, Nil as List<T>, append);
+
+const add1toEach = (l: List<number>): List<number> =>
+  foldLeft(l, Nil as List<number>, (a, h) => Cons(h + 1, a));
+const convertToString = (l: List<number>): List<string> =>
+  foldLeft(l, Nil as List<string>, (a, h) => Cons(`${h}`, a));
+
+const map = <A, B>(l: List<A>, f: (x: A) => B): List<B> =>
+  foldLeft(l, Nil as List<B>, (a, h) => Cons(f(h), a));
+
+const filter = <A>(l: List<A>, f: (x: A) => boolean): List<A> =>
+  foldLeft(l, Nil as List<A>, (a, h) => f(h) ? Cons(h, a) : a);
+
+const flatMap = <A, B>(l: List<A>, f: (x: A) => List<B>): List<B> =>
+  flatten(map(l, f));
+
+const filter2 = <A>(l: List<A>, f: (x: A) => boolean): List<A> =>
+  flatMap(l, x => f(x) ? Cons(x, Nil) : Nil);
+
+const zipAdd = (a: List<number>, b: List<number>): List<number> =>
+  a.tag === 'Cons' && b.tag === 'Cons' ? Cons(a.head + b.head, zipAdd(a, b)) : Nil;
+
+const zipWith = <A, B, C>(f: (x: A, y: B) => C, a: List<A>, b: List<B>): List<C> =>
+  a.tag === 'Cons' && b.tag === 'Cons' ? Cons(f(a.head, b.head), zipWith(f, a, b)) : Nil;

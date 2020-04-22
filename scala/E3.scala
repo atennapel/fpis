@@ -110,4 +110,13 @@ object List {
       case (_, _) => Nil
     }
 
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean =
+    (sup, sub) match {
+      case (_, Nil) => true
+      case (Nil, _) => false
+      case (Cons(h1, t1), b@Cons(h2, t2)) if h1 == h2 =>
+        hasSubsequence(t1, t2) || hasSubsequence(t1, b)
+      case (Cons(_, t1), b) => hasSubsequence(t1, b)
+    }
+
 }

@@ -75,3 +75,9 @@ const zipAdd = (a: List<number>, b: List<number>): List<number> =>
 
 const zipWith = <A, B, C>(f: (x: A, y: B) => C, a: List<A>, b: List<B>): List<C> =>
   a.tag === 'Cons' && b.tag === 'Cons' ? Cons(f(a.head, b.head), zipWith(f, a, b)) : Nil;
+
+const hasSubsequence = <T>(sup: List<T>, sub: List<T>): boolean =>
+  sub.tag === 'Nil' ? true :
+  sup.tag === 'Nil' ? false :
+  sup.head === sub.head ? hasSubsequence(sup.tail, sub.tail) || hasSubsequence(sup.tail, sub) :
+  hasSubsequence(sup.tail, sub);

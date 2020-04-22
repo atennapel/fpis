@@ -94,5 +94,12 @@ zipWith :: (a -> b -> c) -> List a -> List b -> List c
 zipWith f (Cons h1 t1) (Cons h2 t2) = Cons (f h1 h2) (zipWith f t1 t2)
 zipWith _ _ _ = Nil
 
+hasSubsequence :: Eq t => List t -> List t -> Bool
+hasSubsequence _ Nil = True
+hasSubsequence Nil _ = False
+hasSubsequence (Cons h1 t1) b@(Cons h2 t2) | h1 == h2 =
+  hasSubsequence t1 t2 || hasSubsequence t1 b
+hasSubsequence (Cons _ t1) b = hasSubsequence t1 b
+
 main :: IO ()
 main = return ()

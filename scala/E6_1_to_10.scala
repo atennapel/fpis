@@ -105,24 +105,24 @@ object SimpleRNG {
 
 case class State[S,+A](run: S => (A,S)) {
 
-  def map[S, A,B](f: A => B): State[S, B] =
+  def map[B](f: A => B): State[S, B] =
     State(s => {
-      val (a, s2) = this.run(s)
+      val (a, s2) = run(s)
       (f(a), s2)
     })
 
-  def map2[S, A,B,C](rb: State[S, B])(f: (A, B) => C): State[S, C] =
-    s => {
-      val (a, s2) = this.run(s)
+  def map2[B,C](rb: State[S, B])(f: (A, B) => C): State[S, C] =
+    State(s => {
+      val (a, s2) = run(s)
       val (b, s3) = rb.run(s2)
       (f(a, b), s3)
-    }
+    })
 
-  def flatMap[S,A,B](g: A => State[S, B]): State[S, B] =
-    s => {
+  def flatMap[B](g: A => State[S, B]): State[S, B] =
+    State(s => {
       val (x, s2) = this.run(s)
-      g(x)(s2)
-    }
+      g(x).run(s2)
+    })
 
 }
 
@@ -131,13 +131,13 @@ object State {
   def unit[S, A](a: A): State[S, A] = State(s => (a, s))
 
   def sequence[S, A](fs: List[State[S, A]]): State[S, List[A]] =
-    s => fs match {
+    State(s => fs match {
       case Nil => (Nil, s)
       case h :: t => {
         val (a, s2) = h.run(s)
-        val (b, s3) = sequence(t)(s2)
+        val (b, s3) = sequence(t).run(s2)
         (a :: b, s3)
       }
-    }
+    })
 
 }
